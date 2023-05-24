@@ -4,8 +4,6 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0" />
 	<link rel="stylesheet" type="text/css" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
-	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
@@ -38,23 +36,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="StaticGame.js"></script>
 <script src="Pong.js"></script>
-<div id='webcam-container'></div>
-<div id='label-container'></div>
-<script type="text/javascript">
-	// More API functions here:
-	// https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-	// the link to your model provided by Teachable Machine export panel
-	const URL = 'https://teachablemachine.withgoogle.com/models/PBZDRy1W2/';
-
-	let model, webcam, labelContainer, maxPredictions;
-
-	let isIos = false; 
-	// fix when running demo in ios, video will be frozen;
-	if (window.navigator.userAgent.indexOf('iPhone') > -1 || window.navigator.userAgent.indexOf('iPad') > -1) {
-	isIos = true;
-	}
-</script>
 <script src="client.js"></script>
 
 </html>

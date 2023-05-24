@@ -85,91 +85,18 @@ function setUsername() {
 	);
 }
 
-let maxObject;
-
-	async function init() {
-		const modelURL = URL + 'model.json';
-		const metadataURL = URL + 'metadata.json';
-
-		// load the model and metadata
-		// Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-		// or files from your local hard drive
-		model = await tmImage.load(modelURL, metadataURL);
-		maxPredictions = model.getTotalClasses();
-
-		// Convenience function to setup a webcam
-		const flip = true; // whether to flip the webcam
-		const width = 200;
-		const height = 200;
-		webcam = new tmImage.Webcam(width, height, flip);
-		await webcam.setup(); // request access to the webcam
-
-		if (isIos) {
-			document.getElementById('webcam-container').appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-			// grab video-object in any way you want and set the attributes
-			const webCamVideo = document.getElementsByTagName('video')[0];
-			webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-			webCamVideo.muted = "true";
-			webCamVideo.style.width = width + 'px';
-			webCamVideo.style.height = height + 'px';
-		} else {
-			document.getElementById("webcam-container").appendChild(webcam.canvas);
-		}
-		// append elements to the DOM
-		labelContainer = document.getElementById('label-container');
-		for (let i = 0; i < maxPredictions; i++) { // and class labels
-			labelContainer.appendChild(document.createElement('div'));
-		}
-		webcam.play();
-		window.requestAnimationFrame(loop);
-	}
-
-	async function loop() {
-		webcam.update(); // update the webcam frame
-		await predict();
-		window.requestAnimationFrame(loop);
-	}
-
-	// run the webcam image through the image model
-	async function predict() {
-		// predict can take in an image, video or canvas html element
-		let prediction;
-		if (isIos) {
-			prediction = await model.predict(webcam.webcam);
-		} else {
-			prediction = await model.predict(webcam.canvas);
-		}
-		
-		const probability = [...prediction.map(prob => prob.probability)]
-		const arr = [...prediction.map(prob => prob.probability)]
-		max_inp = Math.max(...arr)
-		// console.log(arr, max_inp)
-		
-		
-		maxObject = prediction.reduce((max, obj) => {return obj.probability > max.probability ? obj : max;});
-					
-		console.log(maxObject)
-		labelContainer.innerHTML = maxObject?.className
-	}
-
 //Single Player vs CPU
 function singlePlayer() {
-	init()
-	async function loop() {
-		webcam.update(); // update the webcam frame
-		await predict();
-		window.requestAnimationFrame(loop);
-	}
+	//Controls
 	//Keyboard
 	let KEYMAP = {};
 	KEYMAP[87] = false;
 	KEYMAP[83] = false;
 	KEYMAP[38] = false;
 	KEYMAP[40] = false;
-
 	document.addEventListener('keydown', function (event) {
 		KEYMAP[event.keyCode] = true;
-	});		
+	});
 	document.addEventListener('keyup', function (event) {
 		KEYMAP[event.keyCode] = false;
 	});
@@ -187,8 +114,8 @@ function singlePlayer() {
 	);
 	clearInterval(interval);
 	interval = setInterval(() => {
-		if (maxObject.className === 'up') game_state.upSelf();
-		if (maxObject.className === 'down') game_state.downSelf();
+		if (KEYMAP[87] || KEYMAP[38]) game_state.upSelf();
+		if (KEYMAP[83] || KEYMAP[40]) game_state.downSelf();
 		game_state.update();
 		game.update();
 		game_state.game.self.score = game.players[0].score;
