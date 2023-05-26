@@ -1,5 +1,6 @@
 var express = require("express");
 var Game = require("./Game");
+const expressStaticGzip = require("express-static-gzip");
 var app = express();
 const HERTZ = 30; //Game updates per second
 const port = process.env.PORT || 80;

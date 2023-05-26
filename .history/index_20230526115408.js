@@ -1,5 +1,8 @@
 var express = require("express");
 var Game = require("./Game");
+const expressStaticGzip = require("express-static-gzip");
+const path = require("path");
+
 var app = express();
 const HERTZ = 30; //Game updates per second
 const port = process.env.PORT || 80;
@@ -7,8 +10,8 @@ var server = require("http").createServer(app).listen(port);
 var io = require("socket.io")(server);
 const uNRegex = new RegExp("^[a-zA-Z0-9_.-]{3,}$");
 
-app.use(express.static(__dirname + "/node_modules"));
-app.use(express.static(__dirname + "/public"));
+app.use(expressStaticGzip(path.join(__dirname + "/node_modules")));
+app.use(express.static(path.join(__dirname + "/public")));
 app.get("/", function (req, res, next) {
   res.sendFile(__dirname + "/public/index.html");
 });

@@ -7,7 +7,7 @@ var server = require("http").createServer(app).listen(port);
 var io = require("socket.io")(server);
 const uNRegex = new RegExp("^[a-zA-Z0-9_.-]{3,}$");
 
-app.use(express.static(__dirname + "/node_modules"));
+app.use(express.static("/static", __dirname + "/node_modules"));
 app.use(express.static(__dirname + "/public"));
 app.get("/", function (req, res, next) {
   res.sendFile(__dirname + "/public/index.html");

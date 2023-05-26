@@ -9,11 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tensorflow-models/speech-commands": "^0.5.4",
-    "@tensorflow/tfjs": "^4.6.0",
     "eslint": "^8.41.0",
     "express": "^4.17.1",
-    "express-static-gzip": "^2.1.7",
     "jquery": "^3.4.1",
     "package.json": "^2.0.1",
     "prettier": "^2.8.8",

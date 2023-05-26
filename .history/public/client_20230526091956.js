@@ -86,78 +86,47 @@ function setUsername() {
 
 let maxObject;
 
-const webcam_func = async () => {
-  // load the model and metadata
-  // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-  // or files from your local hard drive
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
-
-  // Convenience function to setup a webcam
-  const flip = true; // whether to flip the webcam
-  const width = 200;
-  const height = 200;
-  webcam = new tmImage.Webcam(width, height, flip);
-  await webcam.setup(); // request access to the webcam
-
-  if (isIos) {
-    document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-    // grab video-object in any way you want and set the attributes
-    const webCamVideo = document.getElementsByTagName("video")[0];
-    webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-    webCamVideo.muted = "true";
-    webCamVideo.style.width = width + "px";
-    webCamVideo.style.height = height + "px";
-  } else {
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-  }
-  // append elements to the DOM
-  labelContainer = document.getElementById("label-container");
-  for (let i = 0; i < maxPredictions; i++) {
-    // and class labels
-    labelContainer.appendChild(document.createElement("div"));
-  }
-  webcam.play();
-  window.requestAnimationFrame(loop);
-};
-
-const mic_func = async () => {};
-
 async function init(medium) {
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
+  const webcam_func = () => {
 
-  // Convenience function to setup a webcam
-  const flip = true; // whether to flip the webcam
-  const width = 200;
-  const height = 200;
-  webcam = new tmImage.Webcam(width, height, flip);
-  await webcam.setup(); // request access to the webcam
+	// load the model and metadata
+	// Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+	// or files from your local hard drive
+	model = await tmImage.load(modelURL, metadataURL);
+	maxPredictions = model.getTotalClasses();
 
-  if (isIos) {
-    document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-    // grab video-object in any way you want and set the attributes
-    const webCamVideo = document.getElementsByTagName("video")[0];
-    webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-    webCamVideo.muted = "true";
-    webCamVideo.style.width = width + "px";
-    webCamVideo.style.height = height + "px";
-  } else {
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-  }
-  // append elements to the DOM
-  labelContainer = document.getElementById("label-container");
-  for (let i = 0; i < maxPredictions; i++) {
-    // and class labels
-    labelContainer.appendChild(document.createElement("div"));
-  }
-  webcam.play();
-  window.requestAnimationFrame(loop);
-  // await webcam_func();
+	// Convenience function to setup a webcam
+	const flip = true; // whether to flip the webcam
+	const width = 200;
+	const height = 200;
+	webcam = new tmImage.Webcam(width, height, flip);
+	await webcam.setup(); // request access to the webcam
+
+	if (isIos) {
+		document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
+		// grab video-object in any way you want and set the attributes
+		const webCamVideo = document.getElementsByTagName("video")[0];
+		webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
+		webCamVideo.muted = "true";
+		webCamVideo.style.width = width + "px";
+		webCamVideo.style.height = height + "px";
+	} else {
+		document.getElementById("webcam-container").appendChild(webcam.canvas);
+	}
+	// append elements to the DOM
+	labelContainer = document.getElementById("label-container");
+	for (let i = 0; i < maxPredictions; i++) {
+		// and class labels
+		labelContainer.appendChild(document.createElement("div"));
+	}
+	webcam.play();
+	window.requestAnimationFrame(loop);
 }
+}
+
 async function loop() {
   webcam.update(); // update the webcam frame
   await predict();
