@@ -219,10 +219,15 @@ async function predict() {
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
+  messages.innerHTML =
+    "Messages: Loading... (reload if doesnt load in 15 seconds";
   if (type === "image") {
     init();
-    messages.innerText = "Messages: Model Loaded";
+    async function loop() {
+      webcam.update(); // update the webcam frame
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
   }
 
   //Keyboard

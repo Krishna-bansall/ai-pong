@@ -23,11 +23,6 @@ h1 {
   top: 30px;
   left: 10px;
 }
-#messages {
-  font-size: 15px;
-  top: 30px;
-  left: 10vw;
-}
 
 #github-link {
   font-size: 15px;
@@ -48,16 +43,16 @@ h2 {
 #start-screen {
   position: absolute;
   display: flex;
-  flex-direction: column;
-  transform: translate(-50%, -50%) scale(0.7);
+  flex-direction: row;
   text-align: center;
   font-size: 32px;
+  transform: scale(0.8);
   top: 50%;
   left: 50%;
-  /* Add the following properties */
-  transform-origin: center;
-  justify-content: center;
-  align-items: center;
+  margin-top: -125px;
+  margin-left: -250px;
+  width: 500px;
+  height: 250px;
 }
 
 #input-username[type="text"] {
@@ -69,25 +64,6 @@ h2 {
   width: 460px;
   padding: 10px 15px;
   border-radius: 4px;
-}
-#input-script[type="text"] {
-  background-color: black;
-  border: 5px solid white;
-  color: white;
-  text-align: center;
-  font-size: 32px;
-  width: 460px;
-  padding: 10px 15px;
-  border-radius: 4px;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 3vh;
-  border: 3px dashed white;
-  border-radius: 40px;
-  padding: 20px;
 }
 
 .menu-button {

@@ -25,6 +25,23 @@
       // the link to your model provided by Teachable Machine export panel
       const URL = "https://teachablemachine.withgoogle.com/models/MO66fbMrO/";
 
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Request access to the microphone
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(function (stream) {
+            // Microphone access granted
+            // You can now use the stream object to process the audio data
+            console.log("Microphone access granted");
+          })
+          .catch(function (error) {
+            // Microphone access denied or error occurred
+            console.error("Error accessing microphone:", error);
+          });
+      } else {
+        console.error("getUserMedia not supported in this browser");
+      }
+
       async function createModel() {
         const checkpointURL = URL + "model.json"; // model topology
         const metadataURL = URL + "metadata.json"; // model metadata
@@ -53,32 +70,13 @@
         // listen() takes two arguments:
         // 1. A callback function that is invoked anytime a word is recognized.
         // 2. A configuration object with adjustable fields
-
         recognizer.listen(
           (result) => {
             const scores = result.scores; // probability of prediction for each class
-            let maxScore = 0;
-            let maxClass = "";
-
-            // Find the class with the maximum score
-            for (let i = 0; i < classLabels.length; i++) {
-              const score = scores[i];
-              if (score > maxScore) {
-                maxScore = score;
-                maxClass = classLabels[i];
-              }
-            }
-
-            const prediction = {
-              className: maxClass,
-              score: maxScore.toFixed(2),
-            };
-
-            console.log(prediction);
-            // Render the probability scores per class
+            // render the probability scores per class
             for (let i = 0; i < classLabels.length; i++) {
               const classPrediction =
-                classLabels[i] + ": " + scores[i].toFixed(2);
+                classLabels[i] + ": " + result.scores[i].toFixed(2);
               labelContainer.childNodes[i].innerHTML = classPrediction;
             }
           },

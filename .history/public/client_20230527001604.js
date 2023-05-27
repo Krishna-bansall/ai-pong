@@ -3,9 +3,6 @@ console.log(host);
 var socket = io.connect(host);
 
 let game_state;
-let URL;
-let type;
-let messages = document.getElementById("messages");
 
 //Changes text on searching for match page
 let i = "";
@@ -20,7 +17,7 @@ let interval = setInterval(() => {
 let ping_interval = setInterval(() => {
   let time = Date.now();
   socket.emit("get-ping", (callback) => {
-    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} |`;
+    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time}ms`;
   });
 }, 500);
 
@@ -87,33 +84,6 @@ function setUsername() {
   );
 }
 
-// Audio
-function useAudio() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "audio";
-  messages.innerHTML = "Message: Audio Model Set";
-  console.log("audio", link);
-}
-
-// Image
-function useImage() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "image";
-  messages.innerHTML = "Message: Image Model Set";
-  console.log("Image", link);
-}
-
-// Pose
-function usePose() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "pose";
-  messages.innerHTML = "Message: Pose Model Set";
-  console.log("Pose", link);
-}
-
 let maxObject;
 
 const webcam_func = async () => {
@@ -157,36 +127,7 @@ async function init(medium) {
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
-
-  // Convenience function to setup a webcam
-  const flip = true; // whether to flip the webcam
-  const width = 200;
-  const height = 200;
-  webcam = new tmImage.Webcam(width, height, flip);
-  await webcam.setup(); // request access to the webcam
-
-  if (isIos) {
-    document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-    // grab video-object in any way you want and set the attributes
-    const webCamVideo = document.getElementsByTagName("video")[0];
-    webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-    webCamVideo.muted = "true";
-    webCamVideo.style.width = width + "px";
-    webCamVideo.style.height = height + "px";
-  } else {
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
-  }
-  // append elements to the DOM
-  labelContainer = document.getElementById("label-container");
-  for (let i = 0; i < maxPredictions; i++) {
-    // and class labels
-    labelContainer.appendChild(document.createElement("div"));
-  }
-  webcam.play();
-  window.requestAnimationFrame(loop);
-  // await webcam_func();
+  webcam_func();
 }
 async function loop() {
   webcam.update(); // update the webcam frame
@@ -219,12 +160,12 @@ async function predict() {
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
-  if (type === "image") {
-    init();
-    messages.innerText = "Messages: Model Loaded";
+  init();
+  async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
   }
-
   //Keyboard
   let KEYMAP = {};
   KEYMAP[87] = false;

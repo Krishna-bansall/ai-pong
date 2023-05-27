@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <h1>Pong</h1>
+    <h2 id="online-players">Online: 0</h2>
+    <h2 id="ping">Ping: 0ms</h2>
+    <div id="start-screen">
+      Username:
+      <input id="input-username" type="text" name="username" value="" />
+      <br />
+      <input
+        class="menu-button"
+        id="set-username"
+        onclick="setUsername();"
+        type="submit"
+        value="Search for Match Online"
+      />
+      <br />
+      <input
+        class="menu-button"
+        id="singleplayer"
+        onclick="singlePlayer();"
+        type="submit"
+        value="Versus CPU"
+      />
+      <input
+        class="menu-button"
+        id="1v1"
+        onclick="oneVerseOne();"
+        type="submit"
+        value="Versus Local Player"
+      />
+    </div>
+
+    <div id="mid-screen">
+      Username:
+      <input id="input-username" type="text" name="username" value="" />
+      <br />
+      <input
+        class="menu-button"
+        id="set-link"
+        onclick="set();"
+        type="submit"
+        value="Search for Match Online"
+      />
+      <br />
+      <input
+        class="menu-button"
+        id="singleplayer"
+        onclick="singlePlayer();"
+        type="submit"
+        value="Versus CPU"
+      />
+      <input
+        class="menu-button"
+        id="1v1"
+        onclick="oneVerseOne();"
+        type="submit"
+        value="Versus Local Player"
+      />
+    </div>
+
+    <div id="match-making" style="display: none">
+      <h3 id="searching-for-match">Searching for Match...</h3>
+    </div>
+    <div id="gameplay" style="display: none" onresize="fit_canvas();">
+      <canvas id="drawing-canvas" width="600" height="500"></canvas>
+    </div>
+  </body>
+  <script src="/jquery/dist/jquery.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="StaticGame.js"></script>
+  <script src="Pong.js"></script>
+  <div id="webcam-container"></div>
+  <div id="label-container"></div>
+
+  <script type="text/javascript">
+    const URL = "https://teachablemachine.withgoogle.com/models/RsSo4JuQU/";
+    let modelState = "image";
+  </script>
+  <script src="client.js"></script>
+</html>

@@ -18,15 +18,11 @@ h1 {
 #online-players {
   right: 10px;
 }
+
 #ping {
   font-size: 15px;
   top: 30px;
   left: 10px;
-}
-#messages {
-  font-size: 15px;
-  top: 30px;
-  left: 10vw;
 }
 
 #github-link {
@@ -45,49 +41,52 @@ h2 {
   font-size: 24px;
 }
 
-#start-screen {
-  position: absolute;
+.start-screen {
   display: flex;
-  flex-direction: column;
-  transform: translate(-50%, -50%) scale(0.7);
-  text-align: center;
-  font-size: 32px;
-  top: 50%;
-  left: 50%;
-  /* Add the following properties */
-  transform-origin: center;
   justify-content: center;
   align-items: center;
-}
-
-#input-username[type="text"] {
-  background-color: black;
-  border: 5px solid white;
-  color: white;
-  text-align: center;
-  font-size: 32px;
-  width: 460px;
-  padding: 10px 15px;
-  border-radius: 4px;
-}
-#input-script[type="text"] {
-  background-color: black;
-  border: 5px solid white;
-  color: white;
-  text-align: center;
-  font-size: 32px;
-  width: 460px;
-  padding: 10px 15px;
-  border-radius: 4px;
-}
-
-.container {
-  display: flex;
   flex-direction: column;
-  margin-bottom: 3vh;
-  border: 3px dashed white;
-  border-radius: 40px;
-  padding: 20px;
+  font-size: 32px;
+  height: 250px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.start-screen.show {
+  opacity: 1;
+}
+
+.mid-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 32px;
+  height: 250px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.mid-screen.show {
+  opacity: 1;
+}
+
+.input-username[type="text"] {
+  background-color: black;
+  border: 5px solid white;
+  color: white;
+  text-align: center;
+  font-size: 32px;
+  width: 460px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+  cursor: text;
+}
+
+.input-username[type="text"]:hover,
+.input-username[type="text"]:focus {
+  border-color: gray;
 }
 
 .menu-button {
@@ -98,28 +97,31 @@ h2 {
   background-color: black;
   color: white;
   border: 3px solid white;
-  transition-duration: 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
 }
 
 .menu-button:hover {
-  cursor: pointer;
   background-color: white;
   color: black;
 }
 
-#match-making {
-  position: absolute;
-  text-align: center;
+.match-making {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   font-size: 32px;
-  top: 50%;
-  left: 50%;
-  margin-top: -125px;
-  margin-left: -275px;
-  width: 550px;
   height: 250px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-#gameplay {
+.match-making.show {
+  opacity: 1;
+}
+
+.gameplay {
   position: relative;
   background: blue;
   height: 90vh;
@@ -127,12 +129,12 @@ h2 {
 }
 
 @media (pointer: none), (pointer: coarse) {
-  #gameplay {
+  .gameplay {
     height: 75vh;
   }
 }
 
-#drawing-canvas {
+.drawing-canvas {
   touch-action: none;
   border: 5px white solid;
   cursor: none;

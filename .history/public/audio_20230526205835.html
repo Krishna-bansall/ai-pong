@@ -25,6 +25,23 @@
       // the link to your model provided by Teachable Machine export panel
       const URL = "https://teachablemachine.withgoogle.com/models/MO66fbMrO/";
 
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Request access to the microphone
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(function (stream) {
+            // Microphone access granted
+            // You can now use the stream object to process the audio data
+            console.log("Microphone access granted");
+          })
+          .catch(function (error) {
+            // Microphone access denied or error occurred
+            console.error("Error accessing microphone:", error);
+          });
+      } else {
+        console.error("getUserMedia not supported in this browser");
+      }
+
       async function createModel() {
         const checkpointURL = URL + "model.json"; // model topology
         const metadataURL = URL + "metadata.json"; // model metadata
@@ -74,13 +91,15 @@
               score: maxScore.toFixed(2),
             };
 
-            console.log(prediction);
             // Render the probability scores per class
             for (let i = 0; i < classLabels.length; i++) {
               const classPrediction =
                 classLabels[i] + ": " + scores[i].toFixed(2);
               labelContainer.childNodes[i].innerHTML = classPrediction;
             }
+
+            // Use the 'prediction' object in your game logic
+            updateGame(prediction);
           },
           {
             includeSpectrogram: true, // in case listen should return result.spectrogram

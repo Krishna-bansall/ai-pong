@@ -3,9 +3,6 @@ console.log(host);
 var socket = io.connect(host);
 
 let game_state;
-let URL;
-let type;
-let messages = document.getElementById("messages");
 
 //Changes text on searching for match page
 let i = "";
@@ -20,7 +17,7 @@ let interval = setInterval(() => {
 let ping_interval = setInterval(() => {
   let time = Date.now();
   socket.emit("get-ping", (callback) => {
-    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} |`;
+    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time}ms`;
   });
 }, 500);
 
@@ -87,33 +84,6 @@ function setUsername() {
   );
 }
 
-// Audio
-function useAudio() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "audio";
-  messages.innerHTML = "Message: Audio Model Set";
-  console.log("audio", link);
-}
-
-// Image
-function useImage() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "image";
-  messages.innerHTML = "Message: Image Model Set";
-  console.log("Image", link);
-}
-
-// Pose
-function usePose() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "pose";
-  messages.innerHTML = "Message: Pose Model Set";
-  console.log("Pose", link);
-}
-
 let maxObject;
 
 const webcam_func = async () => {
@@ -154,6 +124,18 @@ const webcam_func = async () => {
 const mic_func = async () => {};
 
 async function init(medium) {
+  let model, webcam, labelContainer, maxPredictions;
+
+  let isIos = false;
+
+  // fix when running demo in ios, video will be frozen;
+  if (
+    window.navigator.userAgent.indexOf("iPhone") > -1 ||
+    window.navigator.userAgent.indexOf("iPad") > -1
+  ) {
+    isIos = true;
+  }
+
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
@@ -194,7 +176,6 @@ async function loop() {
   window.requestAnimationFrame(loop);
 }
 
-// run the webcam image through the image model
 async function predict() {
   // predict can take in an image, video or canvas html element
   let prediction;
@@ -219,12 +200,12 @@ async function predict() {
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
-  if (type === "image") {
-    init();
-    messages.innerText = "Messages: Model Loaded";
+  init();
+  async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
   }
-
   //Keyboard
   let KEYMAP = {};
   KEYMAP[87] = false;

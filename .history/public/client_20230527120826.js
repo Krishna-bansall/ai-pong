@@ -3,9 +3,6 @@ console.log(host);
 var socket = io.connect(host);
 
 let game_state;
-let URL;
-let type;
-let messages = document.getElementById("messages");
 
 //Changes text on searching for match page
 let i = "";
@@ -20,7 +17,7 @@ let interval = setInterval(() => {
 let ping_interval = setInterval(() => {
   let time = Date.now();
   socket.emit("get-ping", (callback) => {
-    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} |`;
+    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time}ms`;
   });
 }, 500);
 
@@ -87,31 +84,9 @@ function setUsername() {
   );
 }
 
-// Audio
 function useAudio() {
   link = document.getElementById("input-script").value;
-  URL = link;
-  type = "audio";
-  messages.innerHTML = "Message: Audio Model Set";
-  console.log("audio", link);
-}
-
-// Image
-function useImage() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "image";
-  messages.innerHTML = "Message: Image Model Set";
-  console.log("Image", link);
-}
-
-// Pose
-function usePose() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "pose";
-  messages.innerHTML = "Message: Pose Model Set";
-  console.log("Pose", link);
+  console.log(link);
 }
 
 let maxObject;
@@ -219,12 +194,12 @@ async function predict() {
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
-  if (type === "image") {
-    init();
-    messages.innerText = "Messages: Model Loaded";
+  init();
+  async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
   }
-
   //Keyboard
   let KEYMAP = {};
   KEYMAP[87] = false;

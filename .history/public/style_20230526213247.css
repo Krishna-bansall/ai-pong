@@ -1,0 +1,119 @@
+body {
+  overflow: hidden;
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  touch-action: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  height: 10vh;
+  font-size: 50px;
+  text-align: center;
+}
+
+h2 {
+  position: absolute;
+  top: 0;
+  font-size: 15px;
+}
+
+#online-players,
+#ping {
+  right: 10px;
+}
+
+#start-screen,
+#mid-screen,
+#match-making,
+#gameplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#start-screen.show,
+#mid-screen.show,
+#match-making.show,
+#gameplay.show {
+  opacity: 1;
+}
+
+.input-username[type="text"] {
+  background-color: black;
+  border: 5px solid white;
+  color: white;
+  text-align: center;
+  font-size: 32px;
+  width: 460px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+  cursor: text;
+}
+
+.input-username[type="text"]:hover,
+.input-username[type="text"]:focus {
+  border-color: gray;
+}
+
+.menu-button {
+  margin-top: 5px;
+  padding: 10px 20px;
+  width: 500px;
+  border-radius: 20px;
+  background-color: black;
+  color: white;
+  border: 3px solid white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  background-image: linear-gradient(
+    to right,
+    violet,
+    indigo,
+    blue,
+    green,
+    yellow,
+    orange,
+    red
+  );
+  background-size: 150% auto;
+  background-position: left center;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.menu-button:hover {
+  background-position: right center;
+  color: white;
+}
+
+#gameplay {
+  position: relative;
+  background: blue;
+  height: 90vh;
+  width: 100%;
+}
+
+@media (pointer: none), (pointer: coarse) {
+  #gameplay {
+    height: 75vh;
+  }
+}
+
+#drawing-canvas {
+  touch-action: none;
+  border: 5px white solid;
+  cursor: none;
+}

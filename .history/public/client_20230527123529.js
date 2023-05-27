@@ -222,7 +222,6 @@ function singlePlayer() {
   messages.innerHTML = "Messages: Loading...";
   if (type === "image") {
     init();
-    messages.innerText = "Messages: Model Loaded";
   }
 
   //Keyboard

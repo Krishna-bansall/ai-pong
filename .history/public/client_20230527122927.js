@@ -20,7 +20,7 @@ let interval = setInterval(() => {
 let ping_interval = setInterval(() => {
   let time = Date.now();
   socket.emit("get-ping", (callback) => {
-    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} |`;
+    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} ||`;
   });
 }, 500);
 
@@ -219,10 +219,13 @@ async function predict() {
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
   if (type === "image") {
     init();
-    messages.innerText = "Messages: Model Loaded";
+    async function loop() {
+      webcam.update(); // update the webcam frame
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
   }
 
   //Keyboard

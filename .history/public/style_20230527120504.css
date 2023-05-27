@@ -23,11 +23,6 @@ h1 {
   top: 30px;
   left: 10px;
 }
-#messages {
-  font-size: 15px;
-  top: 30px;
-  left: 10vw;
-}
 
 #github-link {
   font-size: 15px;
@@ -84,10 +79,10 @@ h2 {
 .container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 3vh;
-  border: 3px dashed white;
-  border-radius: 40px;
-  padding: 20px;
+  margin-bottom: 5vh;
+  border: 5px dashed white;
+  padding: auto;
+  border-radius: 4px;
 }
 
 .menu-button {

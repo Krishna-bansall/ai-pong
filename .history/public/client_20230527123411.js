@@ -221,8 +221,14 @@ async function predict() {
 function singlePlayer() {
   messages.innerHTML = "Messages: Loading...";
   if (type === "image") {
-    init();
-    messages.innerText = "Messages: Model Loaded";
+    try {
+      init();
+    } catch (error) {}
+    async function loop() {
+      webcam.update(); // update the webcam frame
+      await predict();
+      window.requestAnimationFrame(loop);
+    }
   }
 
   //Keyboard

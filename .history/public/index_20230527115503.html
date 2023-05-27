@@ -20,7 +20,6 @@
     <h1>Pong</h1>
     <h2 id="online-players">Online: 0</h2>
     <h2 id="ping">Ping: 0ms</h2>
-    <h2 id="messages">Messages: None</h2>
     <div id="start-screen">
       <div class="container">
         Username:
@@ -33,6 +32,7 @@
           type="submit"
           value="Search for Match Online"
         />
+        <br />
         <input
           class="menu-button"
           id="singleplayer"
@@ -40,13 +40,13 @@
           type="submit"
           value="Versus CPU"
         />
-        <!-- <input
+        <input
           class="menu-button"
           id="1v1"
           onclick="oneVerseOne();"
           type="submit"
           value="Versus Local Player"
-        /> -->
+        />
       </div>
       <div class="container">
         Script Link:
@@ -54,24 +54,25 @@
         <br />
         <input
           class="menu-button"
-          id="audio"
-          onclick="useAudio();"
+          id="set-script"
+          onclick="setUsername();"
           type="submit"
-          value="Use Audio Model"
+          value="Search for Match Online"
+        />
+        <br />
+        <input
+          class="menu-button"
+          id="singleplayer"
+          onclick="singlePlayer();"
+          type="submit"
+          value="Versus CPU"
         />
         <input
           class="menu-button"
-          id="image"
-          onclick="useImage();"
+          id="1v1"
+          onclick="oneVerseOne();"
           type="submit"
-          value="Use Image Model"
-        />
-        <input
-          class="menu-button"
-          id="pose"
-          onclick="usePose();"
-          type="submit"
-          value="Use Pose Model"
+          value="Versus Local Player"
         />
       </div>
     </div>
@@ -96,7 +97,7 @@
 
     //img - https://teachablemachine.withgoogle.com/models/3v25s68Fk/
 
-    //const URL = "https://teachablemachine.withgoogle.com/models/3v25s68Fk/";
+    const URL = "https://teachablemachine.withgoogle.com/models/3v25s68Fk/";
 
     let model, webcam, labelContainer, maxPredictions;
 

@@ -3,9 +3,6 @@ console.log(host);
 var socket = io.connect(host);
 
 let game_state;
-let URL;
-let type;
-let messages = document.getElementById("messages");
 
 //Changes text on searching for match page
 let i = "";
@@ -20,7 +17,7 @@ let interval = setInterval(() => {
 let ping_interval = setInterval(() => {
   let time = Date.now();
   socket.emit("get-ping", (callback) => {
-    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time} |`;
+    document.getElementById("ping").innerHTML = `Ping: ${Date.now() - time}ms`;
   });
 }, 500);
 
@@ -87,33 +84,6 @@ function setUsername() {
   );
 }
 
-// Audio
-function useAudio() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "audio";
-  messages.innerHTML = "Message: Audio Model Set";
-  console.log("audio", link);
-}
-
-// Image
-function useImage() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "image";
-  messages.innerHTML = "Message: Image Model Set";
-  console.log("Image", link);
-}
-
-// Pose
-function usePose() {
-  link = document.getElementById("input-script").value;
-  URL = link;
-  type = "pose";
-  messages.innerHTML = "Message: Pose Model Set";
-  console.log("Pose", link);
-}
-
 let maxObject;
 
 const webcam_func = async () => {
@@ -153,78 +123,92 @@ const webcam_func = async () => {
 
 const mic_func = async () => {};
 
-async function init(medium) {
-  const modelURL = URL + "model.json";
-  const metadataURL = URL + "metadata.json";
+// Image Model
+if (modelState === "image") {
+  async function init(medium) {
+    let model, webcam, labelContainer, maxPredictions;
 
-  model = await tmImage.load(modelURL, metadataURL);
-  maxPredictions = model.getTotalClasses();
+    let isIos = false;
 
-  // Convenience function to setup a webcam
-  const flip = true; // whether to flip the webcam
-  const width = 200;
-  const height = 200;
-  webcam = new tmImage.Webcam(width, height, flip);
-  await webcam.setup(); // request access to the webcam
+    // fix when running demo in ios, video will be frozen;
+    if (
+      window.navigator.userAgent.indexOf("iPhone") > -1 ||
+      window.navigator.userAgent.indexOf("iPad") > -1
+    ) {
+      isIos = true;
+    }
 
-  if (isIos) {
-    document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
-    // grab video-object in any way you want and set the attributes
-    const webCamVideo = document.getElementsByTagName("video")[0];
-    webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
-    webCamVideo.muted = "true";
-    webCamVideo.style.width = width + "px";
-    webCamVideo.style.height = height + "px";
-  } else {
-    document.getElementById("webcam-container").appendChild(webcam.canvas);
+    const modelURL = URL + "model.json";
+    const metadataURL = URL + "metadata.json";
+
+    model = await tmImage.load(modelURL, metadataURL);
+    maxPredictions = model.getTotalClasses();
+
+    // Convenience function to setup a webcam
+    const flip = true; // whether to flip the webcam
+    const width = 200;
+    const height = 200;
+    webcam = new tmImage.Webcam(width, height, flip);
+    await webcam.setup(); // request access to the webcam
+
+    if (isIos) {
+      document.getElementById("webcam-container").appendChild(webcam.webcam); // webcam object needs to be added in any case to make this work on iOS
+      // grab video-object in any way you want and set the attributes
+      const webCamVideo = document.getElementsByTagName("video")[0];
+      webCamVideo.setAttribute("playsinline", true); // written with "setAttribute" bc. iOS buggs otherwise
+      webCamVideo.muted = "true";
+      webCamVideo.style.width = width + "px";
+      webCamVideo.style.height = height + "px";
+    } else {
+      document.getElementById("webcam-container").appendChild(webcam.canvas);
+    }
+    // append elements to the DOM
+    labelContainer = document.getElementById("label-container");
+    for (let i = 0; i < maxPredictions; i++) {
+      // and class labels
+      labelContainer.appendChild(document.createElement("div"));
+    }
+    webcam.play();
+    window.requestAnimationFrame(loop);
+    // await webcam_func();
   }
-  // append elements to the DOM
-  labelContainer = document.getElementById("label-container");
-  for (let i = 0; i < maxPredictions; i++) {
-    // and class labels
-    labelContainer.appendChild(document.createElement("div"));
-  }
-  webcam.play();
-  window.requestAnimationFrame(loop);
-  // await webcam_func();
-}
-async function loop() {
-  webcam.update(); // update the webcam frame
-  await predict();
-  window.requestAnimationFrame(loop);
-}
-
-// run the webcam image through the image model
-async function predict() {
-  // predict can take in an image, video or canvas html element
-  let prediction;
-  if (isIos) {
-    prediction = await model.predict(webcam.webcam);
-  } else {
-    prediction = await model.predict(webcam.canvas);
+  async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
   }
 
-  const probability = [...prediction.map((prob) => prob.probability)];
-  const arr = [...prediction.map((prob) => prob.probability)];
-  max_inp = Math.max(...arr);
-  // console.log(arr, max_inp)
+  async function predict() {
+    // predict can take in an image, video or canvas html element
+    let prediction;
+    if (isIos) {
+      prediction = await model.predict(webcam.webcam);
+    } else {
+      prediction = await model.predict(webcam.canvas);
+    }
 
-  maxObject = prediction.reduce((max, obj) => {
-    return obj.probability > max.probability ? obj : max;
-  });
+    const probability = [...prediction.map((prob) => prob.probability)];
+    const arr = [...prediction.map((prob) => prob.probability)];
+    max_inp = Math.max(...arr);
+    // console.log(arr, max_inp)
 
-  console.log(maxObject);
-  labelContainer.innerHTML = maxObject?.className;
+    maxObject = prediction.reduce((max, obj) => {
+      return obj.probability > max.probability ? obj : max;
+    });
+
+    console.log(maxObject);
+    labelContainer.innerHTML = maxObject?.className;
+  }
 }
 
 //Single Player vs CPU
 function singlePlayer() {
-  messages.innerHTML = "Messages: Loading...";
-  if (type === "image") {
-    init();
-    messages.innerText = "Messages: Model Loaded";
+  init();
+  async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
   }
-
   //Keyboard
   let KEYMAP = {};
   KEYMAP[87] = false;
